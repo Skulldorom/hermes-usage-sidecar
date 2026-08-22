@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hermes-usage-sidecar"
+version = "0.1.0"
+description = "Read-only Hermes Agent usage sidecar for Usage Dashboard"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [{name = "Hermes-Agent", email = "hermes-agent@nousresearch.com"}]
+dependencies = [
+  "fastapi>=0.111,<1.0",
+  "uvicorn[standard]>=0.30,<1.0",
+]
+
+[project.optional-dependencies]
+test = [
+  "httpx>=0.27,<1.0",
+  "pytest>=8,<9",
+]
+
+[project.scripts]
+hermes-usage-sidecar = "hermes_usage_sidecar.__main__:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.setuptools.packages.find]
+where = ["src"]
