@@ -1,0 +1,19 @@
+[Unit]
+Description=Hermes Usage Sidecar
+After=network-online.target
+
+[Service]
+Type=simple
+Environment=USAGE_SIDECAR_TOKEN=change-me
+ExecStart=%h/.local/bin/hermes-usage-sidecar --hermes-home %h/.hermes --state-db %h/.local/state/hermes-usage-sidecar/state.db --bind 127.0.0.1 --port 8799 --poll 30
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadOnlyPaths=%h/.hermes
+ReadWritePaths=%h/.local/state/hermes-usage-sidecar
+
+[Install]
+WantedBy=default.target
