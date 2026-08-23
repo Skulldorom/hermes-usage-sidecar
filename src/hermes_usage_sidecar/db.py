@@ -23,7 +23,7 @@ SELECT u.session_id, u.model, u.billing_provider, u.billing_base_url,
        s.source AS platform, s.profile_name, s.parent_session_id,
        s.started_at, s.ended_at, s.title, 0 AS legacy_residual
 FROM session_model_usage u JOIN sessions s ON s.id = u.session_id
-WHERE COALESCE(u.last_seen, 0) >= ?
+WHERE COALESCE(u.last_seen, 0) > ?
 ORDER BY COALESCE(u.last_seen, 0), u.session_id, u.model, u.billing_provider, u.billing_base_url, u.billing_mode, COALESCE(u.task, '')
 """
 LEGACY_RECONCILIATION_SQL = """
@@ -57,7 +57,7 @@ SELECT s.id AS session_id, COALESCE(s.model, 'unknown') AS model,
        s.source AS platform, s.profile_name, s.parent_session_id,
        s.started_at, s.ended_at, s.title, 1 AS legacy_residual
 FROM sessions s LEFT JOIN usage_totals u ON u.session_id = s.id
-WHERE COALESCE(s.ended_at, s.started_at, 0) >= ?
+WHERE COALESCE(s.ended_at, s.started_at, 0) > ?
   AND (MAX(0, COALESCE(s.api_call_count, 0) - COALESCE(u.api_call_count, 0)) > 0
     OR MAX(0, COALESCE(s.input_tokens, 0) - COALESCE(u.input_tokens, 0)) > 0
     OR MAX(0, COALESCE(s.output_tokens, 0) - COALESCE(u.output_tokens, 0)) > 0
