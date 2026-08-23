@@ -5,7 +5,7 @@ from typing import Any
 from fastapi import Depends, FastAPI, Header, HTTPException, Query
 from .config import Settings
 from .db import SchemaMismatchError, discover_profile_dbs, fetch_usage_rows, ro_connect, validate_schema
-from .delta import WatermarkStore, compute_deltas
+from .delta import WatermarkStore, compute_observations_since
 
 def create_app(settings: Settings) -> FastAPI:
     app = FastAPI(title="Hermes Usage Sidecar", version="0.1.0")
@@ -38,7 +38,7 @@ def create_app(settings: Settings) -> FastAPI:
                 try: rows = fetch_usage_rows(conn, since=since)
                 finally: conn.close()
                 for row in rows: max_watermark = max(max_watermark, float(row.get("last_seen") or 0))
-                observations.extend(obs.to_dict() for obs in compute_deltas(rows, store, pdb.profile, pdb.path))
+                observations.extend(obs.to_dict() for obs in compute_observations_since(rows, store, pdb.profile, since, pdb.path))
             except SchemaMismatchError as exc:
                 errors[pdb.profile] = str(exc)
         if errors:
