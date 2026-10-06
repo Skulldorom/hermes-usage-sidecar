@@ -9,7 +9,7 @@ description = "Read-only Hermes Agent usage sidecar for Usage Dashboard"
 readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "MIT"}
-authors = [{name = "Hermes-Agent", email = "hermes-agent@nousresearch.com"}]
+authors = [{name = "Skulldorom"}]
 dependencies = [
   "fastapi>=0.111,<1.0",
   "uvicorn[standard]>=0.30,<1.0",
