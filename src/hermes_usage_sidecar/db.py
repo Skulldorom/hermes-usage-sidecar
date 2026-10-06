@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-SUPPORTED_SCHEMA_VERSIONS = frozenset(range(22, 27))
+SUPPORTED_SCHEMA_VERSIONS = frozenset(range(22, 31))
 REQUIRED_SESSION_COLUMNS = {"id","source","profile_name","parent_session_id","started_at","ended_at","title","model","billing_provider","billing_base_url","billing_mode","api_call_count","input_tokens","output_tokens","cache_read_tokens","cache_write_tokens","reasoning_tokens","estimated_cost_usd","actual_cost_usd","cost_status","cost_source"}
 REQUIRED_USAGE_COLUMNS = {"session_id","model","billing_provider","billing_base_url","billing_mode","task","api_call_count","input_tokens","output_tokens","cache_read_tokens","cache_write_tokens","reasoning_tokens","estimated_cost_usd","actual_cost_usd","cost_status","cost_source","first_seen","last_seen"}
 EXTRACTION_SQL = """

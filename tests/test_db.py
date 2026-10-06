@@ -23,6 +23,11 @@ def test_schema_validation_and_extraction(hermes_db):
     hermes_db.commit(); assert schema_version(hermes_db) == 26; assert validate_schema(hermes_db) == 26
     rows = fetch_usage_rows(hermes_db, since=0); assert len(rows) == 1; assert rows[0]["last_seen"] == 2.123456
 
+def test_current_stable_schema_version_is_supported(hermes_home: Path):
+    conn = create_hermes_db(hermes_home / "state.db", version=30)
+    assert validate_schema(conn) == 30
+    conn.close()
+
 def test_unknown_schema_version_is_error(hermes_home: Path):
     conn = create_hermes_db(hermes_home / "state.db", version=99)
     with pytest.raises(SchemaMismatchError): validate_schema(conn)
