@@ -68,10 +68,26 @@ Watermark semantics: the response `watermark` is the greatest Hermes source `las
 
 The sidecar keeps a local snapshot history only to turn cumulative Hermes counters into delta observations across polls and restarts. That state is not an authorization or ingestion cursor, and Hermes databases remain opened read-only.
 
-## Run
+## Install
+
+This project uses `uv` for installation and updates.
+
+Install directly from GitHub as an isolated tool:
 
 ```bash
-python3.10 -m pip install .
+uv tool install git+https://github.com/Skulldorom/hermes-usage-sidecar.git
+```
+
+Verify the installation:
+
+```bash
+uv tool list
+hermes-usage-sidecar --help
+```
+
+Run manually:
+
+```bash
 USAGE_SIDECAR_TOKEN='replace-me' hermes-usage-sidecar --hermes-home ~/.hermes --bind 127.0.0.1 --port 8799
 ```
 
@@ -79,6 +95,27 @@ Smoke dump:
 
 ```bash
 hermes-usage-sidecar --dump --hermes-home ~/.hermes
+```
+
+## Update
+
+Update the installed sidecar to the latest version from `main` with:
+
+```bash
+uv tool install --force git+https://github.com/Skulldorom/hermes-usage-sidecar.git
+```
+
+If the sidecar is managed by the provided systemd user service, restart it after updating:
+
+```bash
+systemctl --user restart hermes-usage-sidecar.service
+systemctl --user status hermes-usage-sidecar.service --no-pager
+```
+
+Then verify the sidecar is healthy:
+
+```bash
+curl -s http://127.0.0.1:8799/healthz
 ```
 
 ## systemd user service (primary)
@@ -105,7 +142,7 @@ docker run --rm -p 127.0.0.1:8799:8799 \
 
 ## Compatibility
 
-Supports Hermes `state.db` schema versions 22 through 26, including current upstream Hermes Agent schema 26. Extra columns are tolerated. Unknown versions or missing/renamed usage columns return an explicit compatibility error instead of incorrect usage.
+Supports Hermes `state.db` schema versions 22 through 30. Extra columns are tolerated. Unknown versions or missing/renamed usage columns return an explicit compatibility error instead of incorrect usage.
 
 ## Usage Dashboard setup
 
